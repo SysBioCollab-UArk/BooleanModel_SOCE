@@ -59,14 +59,14 @@ initial_model = initial_conditions + rules
 # marker = ["o", "^", "*", "|", "+", "d", "H"]
 # colors = ["green", "grey", "black", "yellow", "red", "purple", "brown"]
 
-species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER"]
-marker = ["o", "^", "*", "d", "H"]
-colors = ["green", "black", "red", "purple", "brown"]
+species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER", "Ca_ext"]
+marker = ["o", "^", "*", "d", "H","v"]
+colors = ["green", "black", "red", "purple", "brown","orange"]
 
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 1000  # number of Boolean runs
+n_runs = 200 # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 10
