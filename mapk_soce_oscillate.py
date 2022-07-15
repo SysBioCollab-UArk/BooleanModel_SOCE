@@ -66,7 +66,7 @@ colors = ["green", "black", "red", "purple", "brown"]
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 100  # number of Boolean runs
+n_runs = 1000  # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 10
