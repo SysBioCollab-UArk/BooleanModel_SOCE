@@ -49,7 +49,7 @@ for i in range(n_delays):
     else:
         rules += 'Delay%d* = Delay%d and not ERK\n' % (i, i-1)
     if i == n_delays-1:
-        rules += 'Gene_exp* = Delay%d and not ERK\n' % (n_delays-1)
+        rules += 'Gene_exp* = Delay%d and not ERK\n' % i
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
