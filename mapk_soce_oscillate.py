@@ -3,8 +3,8 @@ from boolean2 import util
 import numpy as np
 import pylab
 
-n_nodes = 20
-n_delays = 50
+n_nodes = 100  # 20 50 50 200 10 10  100
+n_delays = 10  # 50 20 50 50  10 100 10
 
 initial_conditions = '''
 BRAFi = False
@@ -40,7 +40,7 @@ for i in range(n_nodes):
     else:
         rules += 'Node%d* = Node%d or MEK\n' % (i, i-1)
     if i == n_nodes-1:
-        rules += 'Ca_pump_ER* = Node%d and not pumpi\n' % i
+        rules += 'Ca_pump_ER* = Node%d or MEK and not pumpi\n' % i
 # Add Gene_exp delay rules
 for i in range(n_delays):
     initial_conditions += 'Delay%d = False\n' % i
@@ -66,7 +66,7 @@ colors = ["green", "black", "red", "purple", "brown"]
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 1000  # number of Boolean runs
+n_runs = 100  # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 10
