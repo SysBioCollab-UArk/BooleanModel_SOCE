@@ -8,8 +8,8 @@ n_delays = 50
 initial_conditions = '''
 BRAFi = False
 BRAF = True
-MEK = False
-ERK = False
+MEK = True
+ERK = True
 Gene_exp = False
 Ca_ext = True
 Ca_channel = True
@@ -36,13 +36,24 @@ Ca_cyt_2* = Ca_cyt_1 and not Ca_pump_ER
 Ca_cyt_3* = Ca_cyt_2 and Ca_ext and Ca_channel
 '''
 # Add delay rules
+# for i in range(n_delays):
+#     if i == 0:
+#         rules += 'Delay0* = not ERK\n'
+#     else:
+#         rules += 'Delay%d* = Delay%d and not ERK\n' % (i, i-1)
+#     if i == n_delays-1:
+#         rules += 'Gene_exp* = Delay%d and not ERK\n' % (n_delays-1)
+
+
 for i in range(n_delays):
     if i == 0:
         rules += 'Delay0* = not ERK\n'
     else:
-        rules += 'Delay%d* = Delay%d and not ERK\n' % (i, i-1)
+        rules += 'Delay%d* = Delay%d\n' % (i, i-1)
     if i == n_delays-1:
-        rules += 'Gene_exp* = Delay%d and not ERK\n' % (n_delays-1)
+        rules += 'Gene_exp* = Delay%d\n' % (n_delays-1)
+
+
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
@@ -52,20 +63,20 @@ initial_model = initial_conditions + rules
 # marker = ["o", "^", "*", "|", "+", "d", "H"]
 # colors = ["green", "grey", "black", "yellow", "red", "purple", "brown"]
 
-species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER"]
-marker = ["o", "^", "*", "d", "H"]
-colors = ["green", "black", "red", "purple", "brown"]
+species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER","Gene_exp", "MEK"]
+marker = ["o", "^", "*", "d", "H","v", "<"]
+colors = ["green", "black", "red", "purple", "brown","yellow","orange"]
 
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 1000  # number of Boolean runs
+n_runs = 500  # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 10
 brafi_steps = 50
 pumpi_steps = 10
-ca_ext_steps = 10
+ca_ext_steps = 50 #10
 pumpi_off_steps = 50
 
 for i in range(n_runs):
@@ -174,5 +185,20 @@ pylab.ylabel('probability ON', fontsize=16)
 pylab.xticks(fontsize=16)
 pylab.yticks(fontsize=16)
 pylab.tight_layout()
+
+
+pylab.figure()
+start = equil_steps
+for i in range(n_delays):
+    pylab.plot(avgs["Delay%d" % i][start:])
+pylab.xlim(xmin=0)
+pylab.ylim((-0.1, 1.1))
+pylab.xlabel('iteration', fontsize=16)
+pylab.ylabel('probability ON', fontsize=16)
+pylab.xticks(fontsize=16)
+pylab.yticks(fontsize=16)
+pylab.tight_layout()
+
+
 
 pylab.show()

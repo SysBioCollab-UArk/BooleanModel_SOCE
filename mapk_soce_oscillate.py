@@ -3,14 +3,14 @@ from boolean2 import util
 import numpy as np
 import pylab
 
-n_nodes = 100  # 20 50 50 200 10 10  100
-n_delays = 10  # 50 20 50 50  10 100 10
+n_nodes = 50
+n_delays = 50
 
 initial_conditions = '''
 BRAFi = False
 BRAF = True
-MEK = False
-ERK = False
+MEK = True
+ERK = True
 Gene_exp = False
 Ca_ext = True
 Ca_channel = True
@@ -38,18 +38,18 @@ for i in range(n_nodes):
     if i == 0:
         rules += 'Node0* = MEK\n'
     else:
-        rules += 'Node%d* = Node%d or MEK\n' % (i, i-1)
+        rules += 'Node%d* = Node%d\n' % (i, i-1)
     if i == n_nodes-1:
-        rules += 'Ca_pump_ER* = Node%d or MEK and not pumpi\n' % i
+        rules += 'Ca_pump_ER* = Node%d and not pumpi\n' % i
 # Add Gene_exp delay rules
 for i in range(n_delays):
     initial_conditions += 'Delay%d = False\n' % i
     if i == 0:
         rules += 'Delay0* = not ERK\n'
     else:
-        rules += 'Delay%d* = Delay%d and not ERK\n' % (i, i-1)
+        rules += 'Delay%d* = Delay%d\n' % (i, i-1)
     if i == n_delays-1:
-        rules += 'Gene_exp* = Delay%d and not ERK\n' % i
+        rules += 'Gene_exp* = Delay%d\n' % (n_delays-1)
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
@@ -59,18 +59,18 @@ initial_model = initial_conditions + rules
 # marker = ["o", "^", "*", "|", "+", "d", "H"]
 # colors = ["green", "grey", "black", "yellow", "red", "purple", "brown"]
 
-species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER"]
-marker = ["o", "^", "*", "d", "H"]
-colors = ["green", "black", "red", "purple", "brown"]
+species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER", "Ca_ext"]
+marker = ["o", "^", "*", "d", "H","v"]
+colors = ["green", "black", "red", "purple", "brown","orange"]
 
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 1000  # number of Boolean runs
+n_runs = 500 # number of Boolean runs
 
 # Boolean update steps for each stage
-equil_steps = 10
-brafi_steps = 500  # 50
+equil_steps = 50
+brafi_steps = 500 # 50
 # pumpi_steps = 10
 # ca_ext_steps = 10
 # pumpi_off_steps = 50
