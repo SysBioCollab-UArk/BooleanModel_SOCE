@@ -3,8 +3,8 @@ from boolean2 import util
 import numpy as np
 import pylab
 
-n_nodes = 50
-n_delays = 50
+n_nodes = 30
+n_delays = 70
 
 initial_conditions = '''
 BRAFi = False
@@ -53,7 +53,8 @@ for i in range(n_delays):
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
-
+print (initial_model)
+quit()
 # For plotting
 # species_to_plot = ["BRAF", "MEK", "ERK", "Gene_exp", "Ca_channel", "Ca_pump_ER", "Ca_ER"]
 # marker = ["o", "^", "*", "|", "+", "d", "H"]
@@ -66,7 +67,7 @@ colors = ["green", "black", "red", "purple", "brown","orange"]
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 500 # number of Boolean runs
+n_runs = 1000 # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 50
