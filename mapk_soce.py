@@ -63,9 +63,9 @@ initial_model = initial_conditions + rules
 # marker = ["o", "^", "*", "|", "+", "d", "H"]
 # colors = ["green", "grey", "black", "yellow", "red", "purple", "brown"]
 
-species_to_plot = ["BRAF", "ERK", "Ca_channel", "Ca_pump_ER", "Ca_ER","Gene_exp", "MEK"]
-marker = ["o", "^", "*", "d", "H","v", "<"]
-colors = ["green", "black", "red", "purple", "brown","yellow","orange"]
+species_to_plot = ['BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_exp', 'MEK']
+markers = ['o', '^', '*', 'd', 'H', 'v', '<', '>']
+colors = ['green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
 
 # For storing trajectories
 coll = util.Collector()
@@ -161,8 +161,8 @@ Ca_cyt_avg = (Ca_cyt_1+Ca_cyt_2+Ca_cyt_3)/3.0
 pylab.figure(figsize=(12.8, 4.8))
 start = equil_steps
 pylab.plot(Ca_cyt_avg[start:], 'sb-', label='Ca_cyt')
-for species, m, c in zip(species_to_plot, marker, colors):
-    pylab.plot(avgs[species][start:], marker=m, color=c, label=species)
+for sp, marker, color in zip(species_to_plot, markers, colors):
+    pylab.plot(avgs[sp][start:], marker=marker, color=color, label=sp)
 # pylab.legend(loc=0)
 pylab.legend(loc="upper left", fontsize=15, ncol=1, bbox_to_anchor=(0.6, 0.9))  # (0.55, 0.8))
 pylab.xlim(xmin=0)
