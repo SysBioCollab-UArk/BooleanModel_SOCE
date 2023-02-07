@@ -57,6 +57,8 @@ for i in range(n_delays):
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
+print (initial_model)
+quit()
 
 # For plotting
 # species_to_plot = ["BRAF", "MEK", "ERK", "Gene_exp", "Ca_channel", "Ca_pump_ER", "Ca_ER"]

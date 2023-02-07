@@ -44,13 +44,13 @@ with BngFileInterface(model, verbose=True) as bng:
     for n in range(n_runs):
         # print(n)
         # step1: equilibration
-        tspan1 = np.linspace(0, tend_1, tend_1+1)
+        tspan1 = np.linspace(0, tend_1, tend_1+1) # with 11 points
         tspan_all = tspan1
         bng.action('simulate', method='ssa', t_start=tspan_all[0], t_end=tspan_all[-1],
                    n_steps=len(tspan1)-1, suffix=str(n))
 
         # step2: add BRAFi
-        tspan2 = np.linspace(0, tend_2, tend_2+1)
+        tspan2 = np.linspace(0, tend_2, tend_2+1) # with 51 points
         bng.set_concentration("BRAFi(state~False)", 0)
         bng.set_concentration("BRAFi(state~True)", 1)
         kwarg = {'continue': 1}
