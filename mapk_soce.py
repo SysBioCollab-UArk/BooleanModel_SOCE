@@ -25,46 +25,29 @@ for i in range(n_delays):
     initial_conditions += 'Delay%d = False\n' % i
 
 rules = '''
-BRAF* = not BRAFi
-MEK* = BRAF or (Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)
-ERK* = MEK
-Ca_channel* = ERK or Gene_exp
-Ca_cyt_1* = Ca_cyt_1 or (Ca_ext and Ca_channel) or Ca_ER
-Ca_pump_ER* = not pumpi
-Ca_ER* = Ca_cyt_1 and Ca_pump_ER
-Ca_cyt_2* = Ca_cyt_1 and not Ca_pump_ER
-Ca_cyt_3* = Ca_cyt_2 and Ca_ext and Ca_channel
+1: BRAF* = not BRAFi
+1: MEK* = BRAF or (Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)
+1: ERK* = MEK
+1: Ca_channel* = ERK or Gene_exp
+1: Ca_cyt_1* = Ca_cyt_1 or (Ca_ext and Ca_channel) or Ca_ER
+1: Ca_pump_ER* = not pumpi
+1: Ca_ER* = Ca_cyt_1 and Ca_pump_ER
+1: Ca_cyt_2* = Ca_cyt_1 and not Ca_pump_ER
+1: Ca_cyt_3* = Ca_cyt_2 and Ca_ext and Ca_channel
 '''
 # Add delay rules
-# for i in range(n_delays):
-#     if i == 0:
-#         rules += 'Delay0* = not ERK\n'
-#     else:
-#         rules += 'Delay%d* = Delay%d and not ERK\n' % (i, i-1)
-#     if i == n_delays-1:
-#         rules += 'Gene_exp* = Delay%d and not ERK\n' % (n_delays-1)
-
-
 for i in range(n_delays):
     if i == 0:
-        rules += 'Delay0* = not ERK\n'
+        rules += '1: Delay0* = not ERK\n'
     else:
-        rules += 'Delay%d* = Delay%d\n' % (i, i-1)
+        rules += '1: Delay%d* = Delay%d\n' % (i, i-1)
     if i == n_delays-1:
-        rules += 'Gene_exp* = Delay%d\n' % (n_delays-1)
-
-
+        rules += '1: Gene_exp* = Delay%d\n' % (n_delays-1)
 
 # Initial version of the model (for Step 1 below)
 initial_model = initial_conditions + rules
-print (initial_model)
-quit()
 
 # For plotting
-# species_to_plot = ["BRAF", "MEK", "ERK", "Gene_exp", "Ca_channel", "Ca_pump_ER", "Ca_ER"]
-# marker = ["o", "^", "*", "|", "+", "d", "H"]
-# colors = ["green", "grey", "black", "yellow", "red", "purple", "brown"]
-
 species_to_plot = ['BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_exp', 'MEK']
 markers = ['o', '^', '*', 'd', 'H', 'v', '<', '>']
 colors = ['green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
@@ -75,11 +58,11 @@ coll = util.Collector()
 n_runs = 500  # number of Boolean runs
 
 # Boolean update steps for each stage
-equil_steps = 10
-brafi_steps = 50
-pumpi_steps = 10
-ca_ext_steps = 50 #10
-pumpi_off_steps = 50
+equil_steps = 40  # 10
+brafi_steps = 50  # 50
+pumpi_steps = 10  # 10
+ca_ext_steps = 100  # 10
+pumpi_off_steps = 100  # 50
 
 for i in range(n_runs):
     print(i)
@@ -136,6 +119,7 @@ for i in range(n_runs):
         coll.store[species][i] += coll_tmp.store[species][0][1:]
 
     # Step 5, remove pump inhibitor
+    '''
     initial_conditions = ""
     for species in model.states[-1].keys():
         if species != "pumpi" and model.states[-1][species] is True:
@@ -149,6 +133,7 @@ for i in range(n_runs):
     coll_tmp.collect(states=model.states, nodes=model.nodes)
     for species in coll.store.keys():
         coll.store[species][i] += coll_tmp.store[species][0][1:]
+    '''
 
 # Get average node values
 avgs = coll.get_averages(normalize=True)
@@ -157,7 +142,7 @@ avgs = coll.get_averages(normalize=True)
 Ca_cyt_1 = np.array(avgs['Ca_cyt_1'])
 Ca_cyt_2 = np.array(avgs['Ca_cyt_2'])
 Ca_cyt_3 = np.array(avgs['Ca_cyt_3'])
-Ca_cyt_avg = (Ca_cyt_1+Ca_cyt_2+Ca_cyt_3)/3.0
+Ca_cyt_avg = (Ca_cyt_1+Ca_cyt_2+Ca_cyt_3) / 3.0
 
 # Plots
 pylab.figure(figsize=(12.8, 4.8))
@@ -174,33 +159,5 @@ pylab.ylabel('probability ON', fontsize=16)
 pylab.xticks(fontsize=16)
 pylab.yticks(fontsize=16)
 pylab.tight_layout()
-
-# Plot cytosolic Ca only
-pylab.figure()
-start = equil_steps
-pylab.plot(Ca_cyt_avg[start:], 'sb-', label='Ca_cyt')
-pylab.legend(loc="upper left", fontsize=16)
-pylab.xlim(xmin=0)
-pylab.ylim((-0.1, 1.1))
-pylab.xlabel('iteration', fontsize=16)
-pylab.ylabel('probability ON', fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.tight_layout()
-
-
-pylab.figure()
-start = equil_steps
-for i in range(n_delays):
-    pylab.plot(avgs["Delay%d" % i][start:])
-pylab.xlim(xmin=0)
-pylab.ylim((-0.1, 1.1))
-pylab.xlabel('iteration', fontsize=16)
-pylab.ylabel('probability ON', fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.tight_layout()
-
-
 
 pylab.show()
