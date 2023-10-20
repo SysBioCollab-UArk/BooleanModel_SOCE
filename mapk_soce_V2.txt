@@ -66,7 +66,7 @@ Delay49 = False
 1: BRAF* = not BRAFi
 #1: MEK* = (BRAF or (Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)) and not MEKi
 1: MEK*= (BRAF or Delay49) and not MEKi
-1: Delay1*= (Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt3) or (Ca_cyt_2 and Ca_cyt_3)
+1: Delay1*= (Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt_3) or (Ca_cyt_2 and Ca_cyt_3)
 1: Delay2*= Delay1
 1: Delay3* = Delay2
 1: Delay4* = Delay3
@@ -125,10 +125,3 @@ Delay49 = False
 
 
 
-
-
-1: Delay0* = not ERK
-1: Delay1* = Delay0
-1: Delay2* = Delay1
-
-1: Gene_exp* = Delay49
