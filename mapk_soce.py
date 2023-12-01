@@ -55,7 +55,7 @@ colors = ['green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan'
 # For storing trajectories
 coll = util.Collector()
 
-n_runs = 500  # number of Boolean runs
+n_runs = 100  # number of Boolean runs
 
 # Boolean update steps for each stage
 equil_steps = 40  # 10
@@ -160,4 +160,5 @@ pylab.xticks(fontsize=16)
 pylab.yticks(fontsize=16)
 pylab.tight_layout()
 
+pylab.savefig('mapk_soce_plot')
 pylab.show()
