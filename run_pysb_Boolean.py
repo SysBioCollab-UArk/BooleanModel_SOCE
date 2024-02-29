@@ -26,4 +26,4 @@ obs_colors = ['blue', 'green', 'black', 'red', 'purple', 'brown', 'yellow', 'ora
 
 observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
 
-plot_results(tspans, outputs, observables, mode, multi_plots=False, show_plots=True)
+plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plots=True, show_plots=True)

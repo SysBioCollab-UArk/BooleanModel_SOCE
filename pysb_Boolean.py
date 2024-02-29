@@ -163,7 +163,7 @@ class ObsToPlot(object):
         self.marker = marker
 
 
-def plot_results(tspans, outputs, observables, mode, multi_plots=False, show_plots=False):
+def plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plots=True, show_plots=False):
     if not multi_plots:
         plt.figure(figsize=(12.8, 4.8))
         plt.ylim(bottom=-0.05, top=1.05)
@@ -195,6 +195,9 @@ def plot_results(tspans, outputs, observables, mode, multi_plots=False, show_plo
     plt.yticks(fontsize=16)
     plt.legend(loc=0, handles=lines, labels=labels, bbox_to_anchor=(1, 1), fontsize=15)
     plt.tight_layout()
+    if save_plots is not False:
+        fname = "FIG_pysb_Boolean.pdf" if save_plots is True else save_plots
+        plt.savefig(fname, format='pdf')
     if show_plots:
         plt.show()
 
