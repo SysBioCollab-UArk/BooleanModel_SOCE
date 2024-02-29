@@ -2,7 +2,7 @@ from pysb_Boolean import *
 from pysb.importers.boolean import model_from_boolean
 
 mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-model = model_from_boolean('mapk_soce_V3.txt', mode=mode)
+model = model_from_boolean('VERSIONS/mapk_soce_V3.txt', mode=mode)
 n_runs = 100
 
 step_labels = [

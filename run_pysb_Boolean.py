@@ -2,24 +2,10 @@ from pysb_Boolean import *
 from pysb.importers.boolean import model_from_boolean
 
 mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-model = model_from_boolean('mapk_soce_V3.txt', mode=mode)
+model = model_from_boolean('VERSIONS/mapk_soce_V1.txt', mode=mode)
 n_runs = 100
 
-step_labels = [
-    "equilibration",
-    "add BRAFi",
-    "MEKi"
-]
-delta_ts = [50, 500, 50]
-conditions = [
-    None,
-    [("BRAFi", True)],
-    [("MEKi", True)]
-]
-
-sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition
-             in zip(step_labels, delta_ts, conditions)]
-
+sim_steps = get_sim_steps("30_min_BRAFi")
 tspans, outputs = sim_protocol(model, sim_steps, n_runs=n_runs, t_start=-sim_steps[0].delta_t, mode=mode,
                                verbose=True)
 
