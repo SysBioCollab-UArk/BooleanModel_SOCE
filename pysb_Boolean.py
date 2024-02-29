@@ -116,7 +116,7 @@ def plot_results(tspans, outputs, observables, mode, multi_plots=False, show_plo
 if __name__ == '__main__':
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-    model = model_from_boolean('mapk_soce.txt', mode=mode)
+    model = model_from_boolean('mapk_soce_V1.txt', mode=mode)
     n_runs = 100
 
     step_labels = [
@@ -126,13 +126,14 @@ if __name__ == '__main__':
         "add external calcium"  # ,
         # "remove pump inhibitor"
     ]
-    delta_ts = [40, 10, 10, 100, 100]
+    delta_ts = [40, 100, 10, 100]
     conditions = [
         None,
         [("BRAFi", True)],
         [("Ca_ext", False), ("pumpi", True)],
         [("Ca_ext", True)]  # ,
-        # [("pumpi", False)]
+        # [("pumpi", False)],
+        [["MEKi", TRue]]
     ]
 
     sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition

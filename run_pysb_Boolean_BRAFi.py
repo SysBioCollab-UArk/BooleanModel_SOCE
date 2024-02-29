@@ -7,21 +7,26 @@ n_runs = 100
 
 step_labels = [
     "equilibration",
-    "add BRAFi",
-    "MEKi"
+    "remove external calcium and add BRAFi",
+    "add MEKi",
+    "add pump inhibitor",
+    "add external calcium"
 ]
-delta_ts = [50, 500, 50]
+delta_ts = [50, 500,10 ,10, 100]
 conditions = [
     None,
-    [("BRAFi", True)],
-    [("MEKi", True)]
+    [("Ca_ext", False),("BRAFi", True)],
+    [("MEKi", True)],
+    [("pumpi", True)],
+    [("Ca_ext", True)]
 ]
-
 sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition
              in zip(step_labels, delta_ts, conditions)]
 
 tspans, outputs = sim_protocol(model, sim_steps, n_runs=n_runs, t_start=-sim_steps[0].delta_t, mode=mode,
                                verbose=True)
+
+
 
 obs_names = [
     ['Ca_cyt_1_True_obs', 'Ca_cyt_2_True_obs', 'Ca_cyt_3_True_obs'],
