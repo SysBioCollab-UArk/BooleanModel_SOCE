@@ -10,7 +10,7 @@ for version in versions:
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
     model = model_from_boolean('VERSIONS/mapk_soce_V%d.txt' % version, mode=mode)
-    n_runs = 10
+    n_runs = 100
 
     conditions = ["untreated", "30_min_BRAFi", "8_days_BRAFi", "8_days_BRAFi_plus_MEKi"]
     xlims = [(40, 70), (40, 70), (490, 520), (500, 530)]
