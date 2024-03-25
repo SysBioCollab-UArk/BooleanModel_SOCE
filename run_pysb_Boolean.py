@@ -15,7 +15,7 @@ for file in files:
     n_runs = 100
 
     conditions = ["untreated", "30_min_BRAFi", "8_days_BRAFi", "8_days_BRAFi_plus_MEKi"]
-    xlims = [(40, 70), (40, 70), (490, 520), (500, 530)]
+    xlims = [(40, 70), (40, 70), (290, 320), (300, 330)]
 
     for condition, xlim in zip(conditions, xlims):
 
