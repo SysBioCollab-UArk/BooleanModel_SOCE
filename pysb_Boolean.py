@@ -76,8 +76,8 @@ class ObsToPlot(object):
         self.marker = marker
 
 
-def plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plots=True, show_plots=False,
-                 xlim=None, ylim=None):
+def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=True, show_plots=False,
+                 xlim=None, ylim=None, xlabel='iteration'):
     if not multi_plots:
         plt.figure(figsize=(12.8, 4.8))
         plt.ylim(bottom=-0.05, top=1.05)
@@ -103,7 +103,7 @@ def plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plo
             # plot vertical lines for each step
             bottom, top = plt.ylim()
             plt.plot([tspan[-1], tspan[-1]], [bottom, top], 'k--')
-    plt.xlabel('round' if mode == 'ROA' else 'time', fontsize=16)
+    plt.xlabel(xlabel, fontsize=16)
     plt.ylabel('value', fontsize=16)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
@@ -121,23 +121,24 @@ def plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plo
 
 
 if __name__ == '__main__':
+    import os
     from pysb.importers.boolean import model_from_boolean
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-    model = model_from_boolean('VERSIONS/mapk_soce_V1.txt', mode=mode)
+    model = model_from_boolean(os.path.join('VERSIONS', 'mapk_soce_v1.txt'), mode=mode)
     n_runs = 100
 
     step_labels = [
         "equilibration",
-        "remove external calcium and add BRAFi",
+        "remove external calcium and add BRAF inhibitor",
         "add pump inhibitor",
         "add external calcium"
     ]
-    delta_ts = [40, 50, 10, 100]
+    delta_ts = [50, 200, 10, 100]
     conditions = [
         None,
-        [("Ca_ext", False), ("BRAFi", True)],
-        [("pumpi", True)],
+        [("Ca_ext", False), ("BRAF_inhib", True)],
+        [("Ca_pump_ER_inhib", True)],
         [("Ca_ext", True)]
     ]
 
@@ -155,14 +156,13 @@ if __name__ == '__main__':
         'Ca_ext_True_obs',
         'Ca_pump_ER_True_obs',
         'ERK_True_obs',
-        'Gene_exp_True_obs',
+        'Gene_Expr_True_obs',
         'MEK_True_obs'
     ]
-    obs_labels = ['Ca_cyt', 'BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_exp', 'MEK']
+    obs_labels = ['Ca_cyt', 'BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_Expr', 'MEK']
     obs_colors = ['blue', 'green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
     # obs_markers = ['s', 'o', '^', '*', 'd', 'H', 'v', '<', '>']
 
     observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
 
-    plot_results(tspans, outputs, observables, mode, multi_plots=False, show_plots=True,
-                 xlim=(40, 70), ylim=(0.15, 1.05))
+    plot_results(tspans, outputs, observables, multi_plots=False, show_plots=True)
