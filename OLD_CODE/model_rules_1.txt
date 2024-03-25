@@ -1,0 +1,23 @@
+Ca_ER_pumpi = False
+Ca_channel = True
+Ca_ER = True
+Ca_cyt_normal = True
+Ca_ext = True
+Ca_ER_dump = False
+MEK = True
+BRAF = True
+Ca_ER_pump = True
+BRAFi = False
+UK_node = False
+Ca_SOCE = False
+ERK = True
+
+BRAF* = not BRAFi
+MEK* = BRAF or Ca_SOCE
+ERK* = MEK
+UK_node* = not ERK
+Ca_channel* = UK_node or ERK
+Ca_ER_dump* = not Ca_ER_pump
+Ca_SOCE* = Ca_ext and Ca_channel and not Ca_ER
+Ca_ER* = Ca_cyt_normal and Ca_ER_pump
+Ca_ER_pump* = not Ca_ER_pumpi

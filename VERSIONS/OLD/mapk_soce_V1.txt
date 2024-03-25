@@ -113,9 +113,8 @@ Delay97 = False
 Delay98 = False
 Delay99 = False
 
-
 1: BRAF* = not BRAFi
-1: MEK* = BRAF or (Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3) and not MEKi
+1: MEK* = (BRAF or (Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)) and not MEKi
 1: ERK* = MEK
 1: Ca_channel* = ERK or Gene_exp
 1: Ca_cyt_1* = Ca_cyt_1 or (Ca_ext and Ca_channel) or Ca_ER
