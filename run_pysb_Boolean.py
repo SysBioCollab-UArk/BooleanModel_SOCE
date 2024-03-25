@@ -1,15 +1,17 @@
 from pysb.importers.boolean import model_from_boolean
 from pysb_Boolean import *
 from util import get_sim_steps
+import os
 
-versions = [1, 2, 3, 4]
+path = 'VERSIONS'
+files = sorted([file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))])
 
-for version in versions:
+for file in files:
 
-    print('version: %d' % version)
+    print('model: %s' % file)
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-    model = model_from_boolean('VERSIONS/mapk_soce_V%d.txt' % version, mode=mode)
+    model = model_from_boolean(os.path.join(path, file), mode=mode)
     n_runs = 100
 
     conditions = ["untreated", "30_min_BRAFi", "8_days_BRAFi", "8_days_BRAFi_plus_MEKi"]
@@ -40,6 +42,6 @@ for version in versions:
 
         observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
 
-        outfile_name = 'V%d_%s.pdf' % (version, condition)
-        plot_results(tspans, outputs, observables, mode, multi_plots=False, save_plots=outfile_name, show_plots=False,
+        outfile_name = '%s_%s.pdf' % (file[:-4], condition)  # remove the .txt extension from the filename
+        plot_results(tspans, outputs, observables, multi_plots=False, save_plots=outfile_name, show_plots=False,
                      xlim=xlim, ylim=(0.15, 1.05))
