@@ -51,7 +51,7 @@ def create_mapk_soce_model(base_model, new_nodes=None, new_edges=None, inhibited
     for edge in new_edges:
         if edge['n_delays'] > 0:
             for j in range(edge['n_delays']):
-                initial_conditions += 'Delay%d_%d = False\n' % (n, j)
+                initial_conditions += 'Delay%d_%d = %s\n' % (n, j, edge['delays_initials'])
             n += 1
 
     for node in inhibited_nodes:
@@ -191,7 +191,7 @@ if __name__ == '__main__':
             new_nodes=[{'name': 'Gene_Expr', 'initial': False, 'rule': None}],
             new_edges=[{'target': 'Ca_channel', 'condition': 'Gene_Expr', 'n_delays': 0},
                        {'target': 'MEK', 'condition': '(Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)', 'n_delays': 0},
-                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100}],
+                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100, 'delays_initials': False}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
@@ -202,7 +202,7 @@ if __name__ == '__main__':
             base_mapk_soce_model,
             new_edges=[{'target': 'MEK',
                         'condition': '(Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt_3) or (Ca_cyt_2 and Ca_cyt_3)',
-                        'n_delays': 100}],
+                        'n_delays': 100, 'delays_initials': False}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
@@ -214,8 +214,8 @@ if __name__ == '__main__':
             new_nodes=[{'name': 'Gene_Expr', 'initial': False, 'rule': None}],
             new_edges=[{'target': 'Ca_channel', 'condition': 'Gene_Expr', 'n_delays': 0},
                        {'target': 'MEK', 'condition': '(Ca_cyt_1 and Ca_cyt_2 and Ca_cyt_3)', 'n_delays': 0},
-                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100},
-                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100}],
+                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100, 'delays_initials': False},
+                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100, 'delays_initials': True}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
@@ -226,8 +226,8 @@ if __name__ == '__main__':
             base_mapk_soce_model,
             new_edges=[{'target': 'MEK',
                         'condition': '(Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt_3) or (Ca_cyt_2 and Ca_cyt_3)',
-                        'n_delays': 100},
-                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100}],
+                        'n_delays': 100, 'delays_initials': False},
+                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100, 'delays_initials': True}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
@@ -241,8 +241,8 @@ if __name__ == '__main__':
                        {'target': 'MEK',
                         'condition': '(Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt_3) or (Ca_cyt_2 and Ca_cyt_3)',
                         'n_delays': 0},
-                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100},
-                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100}],
+                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100, 'delays_initials': False},
+                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100, 'delays_initials': True}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
@@ -255,9 +255,9 @@ if __name__ == '__main__':
             new_edges=[{'target': 'Ca_channel', 'condition': 'Gene_Expr', 'n_delays': 0},
                        {'target': 'MEK',
                         'condition': '(Ca_cyt_1 and Ca_cyt_2) or (Ca_cyt_1 and Ca_cyt_3) or (Ca_cyt_2 and Ca_cyt_3)',
-                        'n_delays': 100},
-                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100},
-                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100}],
+                        'n_delays': 100, 'delays_initials': False},
+                       {'target': 'Gene_Expr', 'condition': 'not ERK', 'n_delays': 100, 'delays_initials': False},
+                       {'target': 'Ca_pump_ER', 'condition': 'MEK', 'n_delays': 100, 'delays_initials': True}],
             inhibited_nodes=['BRAF', 'MEK', 'Ca_pump_ER']
         )
     )
