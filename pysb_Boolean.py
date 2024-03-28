@@ -1,6 +1,7 @@
 from pysb.simulator import BngSimulator
 import numpy as np
 import matplotlib.pyplot as plt
+import logging
 
 
 class SimStep(object):
@@ -92,6 +93,10 @@ def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=Tru
         labels.append(obs.label)
         for step, out, tspan in zip(range(len(outputs)), outputs, tspans):
             out_observables = np.array(out.observables)
+            # make sure the observable exists. If not, skip it and send a warning
+            if obs.name[0] not in out_observables.dtype.names:
+                logging.warning("Observable '%s' not found. Skipping!" % obs.name[0])
+                break
             y = np.mean(out_observables[obs.name[0]], axis=0)
             if len(obs.name) > 1:
                 for i in range(1, len(obs.name)):
@@ -125,44 +130,53 @@ if __name__ == '__main__':
     from pysb.importers.boolean import model_from_boolean
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
-    model = model_from_boolean(os.path.join('VERSIONS', 'mapk_soce_v1.txt'), mode=mode)
     n_runs = 100
 
     step_labels = [
         "equilibration",
-        "remove external calcium and add BRAF inhibitor",
-        "add pump inhibitor",
-        "add external calcium"
+        "add BRAF inhibitor"
+        # "remove external calcium and add BRAF inhibitor",
+        # "add pump inhibitor",
+        # "add external calcium"
     ]
-    delta_ts = [50, 200, 10, 100]
+    delta_ts = [50, 1000]  # [50, 300, 10, 100]  # [50, 50, 10, 100]
     conditions = [
         None,
-        [("Ca_ext", False), ("BRAF_inhib", True)],
-        [("Ca_pump_ER_inhib", True)],
-        [("Ca_ext", True)]
+        [("BRAF_inhib", True)]
+        # [("Ca_ext", False), ("BRAF_inhib", True)],
+        # [("Ca_pump_ER_inhib", True)],
+        # [("Ca_ext", True)]
     ]
 
     sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition
                  in zip(step_labels, delta_ts, conditions)]
 
-    tspans, outputs = sim_protocol(model, sim_steps, n_runs=n_runs, t_start=-sim_steps[0].delta_t, mode=mode,
-                                   verbose=True)
+    for version in [4]:   # [1, 2, 3, 4, 5, 6]:
 
-    obs_names = [
-        ['Ca_cyt_1_True_obs', 'Ca_cyt_2_True_obs', 'Ca_cyt_3_True_obs'],
-        'BRAF_True_obs',
-        'Ca_channel_True_obs',
-        'Ca_ER_True_obs',
-        'Ca_ext_True_obs',
-        'Ca_pump_ER_True_obs',
-        'ERK_True_obs',
-        'Gene_Expr_True_obs',
-        'MEK_True_obs'
-    ]
-    obs_labels = ['Ca_cyt', 'BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_Expr', 'MEK']
-    obs_colors = ['blue', 'green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
-    # obs_markers = ['s', 'o', '^', '*', 'd', 'H', 'v', '<', '>']
+        print('mapk_soce_v%d.txt' % version)
 
-    observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
+        model = model_from_boolean(os.path.join('VERSIONS', 'mapk_soce_v%d.txt' % version), mode=mode)
 
-    plot_results(tspans, outputs, observables, multi_plots=False, show_plots=True)
+        tspans, outputs = sim_protocol(model, sim_steps, n_runs=n_runs, t_start=-sim_steps[0].delta_t, mode=mode,
+                                       verbose=True)
+
+        obs_names = [
+            ['Ca_cyt_1_True_obs', 'Ca_cyt_2_True_obs', 'Ca_cyt_3_True_obs'],
+            'BRAF_True_obs',
+            'Ca_channel_True_obs',
+            'Ca_ER_True_obs',
+            'Ca_ext_True_obs',
+            'Ca_pump_ER_True_obs',
+            'ERK_True_obs',
+            'Gene_Expr_True_obs',
+            'MEK_True_obs'
+        ]
+        obs_labels = ['Ca_cyt', 'BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_Expr', 'MEK']
+        obs_colors = ['blue', 'green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
+        # obs_markers = ['s', 'o', '^', '*', 'd', 'H', 'v', '<', '>']
+
+        observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
+
+        plot_results(tspans, outputs, observables, multi_plots=False,
+                     save_plots='FIG_pysb_Boolean_v%d.pdf' % version, show_plots=False,
+                     xlim=(-5, 1000), ylim=(-0.05, 1.05))
