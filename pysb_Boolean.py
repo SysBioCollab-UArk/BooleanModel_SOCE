@@ -96,6 +96,7 @@ def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=Tru
             # make sure the observable exists. If not, skip it and send a warning
             if obs.name[0] not in out_observables.dtype.names:
                 logging.warning("Observable '%s' not found. Skipping!" % obs.name[0])
+                labels = labels[:-1]  # remove the last label since this observable doesn't exist
                 break
             y = np.mean(out_observables[obs.name[0]], axis=0)
             if len(obs.name) > 1:
@@ -134,24 +135,24 @@ if __name__ == '__main__':
 
     step_labels = [
         "equilibration",
-        "add BRAF inhibitor"
-        # "remove external calcium and add BRAF inhibitor",
-        # "add pump inhibitor",
-        # "add external calcium"
+        # "add BRAF inhibitor"
+        "remove external calcium and add BRAF inhibitor",
+        "add pump inhibitor",
+        "add external calcium"
     ]
-    delta_ts = [50, 1000]  # [50, 300, 10, 100]  # [50, 50, 10, 100]
+    delta_ts = [50, 300, 10, 100]  # [50, 1000]  # [50, 50, 10, 100]
     conditions = [
         None,
-        [("BRAF_inhib", True)]
-        # [("Ca_ext", False), ("BRAF_inhib", True)],
-        # [("Ca_pump_ER_inhib", True)],
-        # [("Ca_ext", True)]
+        # [("BRAF_inhib", True)]
+        [("Ca_ext", False), ("BRAF_inhib", True)],
+        [("Ca_pump_ER_inhib", True)],
+        [("Ca_ext", True)]
     ]
 
     sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition
                  in zip(step_labels, delta_ts, conditions)]
 
-    for version in [4]:   # [1, 2, 3, 4, 5, 6]:
+    for version in [1, 2, 3, 4, 5, 6]:
 
         print('mapk_soce_v%d.txt' % version)
 
@@ -178,5 +179,5 @@ if __name__ == '__main__':
         observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
 
         plot_results(tspans, outputs, observables, multi_plots=False,
-                     save_plots='FIG_pysb_Boolean_v%d.pdf' % version, show_plots=False,
-                     xlim=(-5, 1000), ylim=(-0.05, 1.05))
+                     save_plots='FIG_pysb_Boolean_v%d_8dayBRAFi.pdf' % version, show_plots=False,
+                     xlim=(-5, 415), ylim=(-0.05, 1.05))
