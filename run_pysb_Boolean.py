@@ -12,7 +12,7 @@ for file in files:
 
     mode = 'GSP'  # 'GSP', 'GA', 'ROA'
     model = model_from_boolean(os.path.join(path, file), mode=mode)
-    n_runs = 10
+    n_runs = 1000
 
     conditions = ["untreated", "30_min_BRAFi", "8_days_BRAFi", "8_days_BRAFi_plus_MEKi"]
     xlims = [(40, 70), (40, 70), (290, 320), (300, 330)]
