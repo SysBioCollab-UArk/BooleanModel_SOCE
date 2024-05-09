@@ -77,16 +77,16 @@ class ObsToPlot(object):
         self.marker = marker
 
 
-def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=True, show_plots=False,
-                 xlim=None, ylim=None, xlabel='iteration'):
+def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=True, show_plots=False, figname=None,
+                 xlim=None, ylim=None, xlabel='iteration', lw=3):
     if not multi_plots:
-        plt.figure(figsize=(12.8, 4.8))
+        plt.figure(num=figname, figsize=(12.8, 4.8))
         plt.ylim(bottom=-0.05, top=1.05)
     lines = []
     labels = []
     for obs in observables:
         if multi_plots:
-            plt.figure(figsize=(12.8, 4.8))
+            plt.figure(num='%s_%s' % (figname, obs.label), figsize=(12.8, 4.8))
             plt.ylim(bottom=-0.05, top=1.05)
             lines = []
             labels = []
@@ -103,7 +103,7 @@ def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=Tru
                 for i in range(1, len(obs.name)):
                     y += np.mean(out_observables[obs.name[i]], axis=0)
                 y /= len(obs.name)
-            line, = plt.plot(tspan, y, lw=3, color=obs.color)
+            line, = plt.plot(tspan, y, lw=lw, color=obs.color)
             if step == 0:
                 lines.append(line)
             # plot vertical lines for each step
