@@ -79,6 +79,10 @@ class ObsToPlot(object):
 
 def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=True, show_plots=False,
                  xlim=None, ylim=None, xlabel='iteration'):
+    if len(tspans.shape) == 1:
+        tspans = np.array([tspans])
+    if len(outputs.shape) == 1:
+        outputs = np.array([outputs])
     if not multi_plots:
         plt.figure(figsize=(12.8, 4.8))
         plt.ylim(bottom=-0.05, top=1.05)
