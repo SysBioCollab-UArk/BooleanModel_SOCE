@@ -43,6 +43,8 @@ def sim_protocol(model, sim_steps, n_runs=1, t_start=0, mode='GSP', verbose=Fals
         else:
             t_start = tspans[-1][-1]
             initials = [sp[-1] for sp in outputs[-1].species]
+            # if len(np.array(initials).shape) == 1:
+            #     initials = [initials]
             n_runs = 1
             if ss.condition is not None:
                 for c in ss.condition:
@@ -79,10 +81,7 @@ class ObsToPlot(object):
 
 def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=True, show_plots=False,
                  xlim=None, ylim=None, xlabel='iteration'):
-    if len(tspans.shape) == 1:
-        tspans = np.array([tspans])
-    if len(outputs.shape) == 1:
-        outputs = np.array([outputs])
+
     if not multi_plots:
         plt.figure(figsize=(12.8, 4.8))
         plt.ylim(bottom=-0.05, top=1.05)
