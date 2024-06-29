@@ -42,10 +42,11 @@ def sim_protocol(model, sim_steps, n_runs=1, t_start=0, mode='GSP', verbose=Fals
         # subsequent steps
         else:
             t_start = tspans[-1][-1]
-            initials = [sp[-1] for sp in outputs[-1].species]
-            # if len(np.array(initials).shape) == 1:
-            #     initials = [initials]
-            n_runs = 1
+            initials = [out_sp[-1] for out_sp in outputs[-1].species]
+            # handle edge case where n_runs == 1 (note that n_runs is set to 1 below, so can't use 'if n_runs == 1')
+            if len(np.array(initials).shape) == 1:
+                initials = [outputs[-1].species[-1]]  # overwrite initials from above
+            n_runs = 1  # number of sims based on number of initials after first step
             if ss.condition is not None:
                 for c in ss.condition:
                     idx1 = sp_names.index("%s(state='%s'%s" % (c[0], str(c[1]), end_string))
@@ -101,11 +102,18 @@ def plot_results(tspans, outputs, observables, multi_plots=False, save_plots=Tru
                 logging.warning("Observable '%s' not found. Skipping!" % obs.name[0])
                 labels = labels[:-1]  # remove the last label since this observable doesn't exist
                 break
-            y = np.mean(out_observables[obs.name[0]], axis=0)
-            if len(obs.name) > 1:
-                for i in range(1, len(obs.name)):
-                    y += np.mean(out_observables[obs.name[i]], axis=0)
-                y /= len(obs.name)
+            if len(np.array(out_observables[obs.name[0]]).shape) > 1:  # typical case -- n_runs > 1
+                y = np.mean(out_observables[obs.name[0]], axis=0)
+                if len(obs.name) > 1:
+                    for i in range(1, len(obs.name)):
+                        y += np.mean(out_observables[obs.name[i]], axis=0)
+                    y /= len(obs.name)
+            else:  # handle edge case where n_runs = 1
+                y = np.array(out_observables[obs.name[0]])
+                if len(obs.name) > 1:
+                    for i in range(1, len(obs.name)):
+                        y += np.array(out_observables[obs.name[i]])
+                    y /= len(obs.name)
             line, = plt.plot(tspan, y, lw=3, color=obs.color)
             if step == 0:
                 lines.append(line)
