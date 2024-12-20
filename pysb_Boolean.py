@@ -146,7 +146,6 @@ if __name__ == '__main__':
 
     step_labels = [
         "equilibration",
-        # "add BRAF inhibitor"
         "remove external calcium and add BRAF inhibitor",
         "add pump inhibitor",
         "add external calcium"
@@ -154,7 +153,6 @@ if __name__ == '__main__':
     delta_ts = [50, 300, 10, 100]  # [50, 1000]  # [50, 50, 10, 100]
     conditions = [
         None,
-        # [("BRAF_inhib", True)]
         [("Ca_ext", False), ("BRAF_inhib", True)],
         [("Ca_pump_ER_inhib", True)],
         [("Ca_ext", True)]
@@ -163,14 +161,18 @@ if __name__ == '__main__':
     sim_steps = [SimStep(label, delta_t, condition) for label, delta_t, condition
                  in zip(step_labels, delta_ts, conditions)]
 
-    for version in [1, 2, 3, 4, 5, 6]:
+    for version in ['1_Pur']:
 
-        print('mapk_soce_v%d.txt' % version)
+        print('mapk_soce_v%s.txt' % version)
 
-        model = model_from_boolean(os.path.join('VERSIONS', 'mapk_soce_v%d.txt' % version), mode=mode)
+        model = model_from_boolean(os.path.join('VERSIONS', 'mapk_soce_v%s.txt' % version), mode=mode)
+
+        print('model created')
 
         tspans, outputs = sim_protocol(model, sim_steps, n_runs=n_runs, t_start=-sim_steps[0].delta_t, mode=mode,
                                        verbose=True)
+
+        print('simulation complete')
 
         obs_names = [
             ['Ca_cyt_1_True_obs', 'Ca_cyt_2_True_obs', 'Ca_cyt_3_True_obs'],
@@ -185,10 +187,9 @@ if __name__ == '__main__':
         ]
         obs_labels = ['Ca_cyt', 'BRAF', 'Ca_channel', 'Ca_ER', 'Ca_ext', 'Ca_pump_ER', 'ERK', 'Gene_Expr', 'MEK']
         obs_colors = ['blue', 'green', 'black', 'red', 'purple', 'brown', 'yellow', 'orange', 'cyan']
-        # obs_markers = ['s', 'o', '^', '*', 'd', 'H', 'v', '<', '>']
 
         observables = [ObsToPlot(name, label, color) for name, label, color in zip(obs_names, obs_labels, obs_colors)]
 
         plot_results(tspans, outputs, observables, multi_plots=False,
-                     save_plots='FIG_pysb_Boolean_v%d_8dayBRAFi.pdf' % version, show_plots=False,
+                     save_plots='FIG_pysb_Boolean_v%s_8dayBRAFi.pdf' % version, show_plots=True,
                      xlim=(-5, 415), ylim=(-0.05, 1.05))
